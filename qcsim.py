@@ -51,7 +51,7 @@ class System:
         self.state = tp(fop, self.state)
 
 
-def grover_operator(no_of_qubits,a):
+def black_box(no_of_qubits,a):
     operator_position=list(bin(a)[2:].zfill(no_of_qubits))
     O_=[[1]]
     for _ in range(no_of_qubits):
@@ -60,9 +60,41 @@ def grover_operator(no_of_qubits,a):
         else :
             O_=tp(O_,I)
     O_=tp(O_,I)
-    C_NOT=[
+    clen=2**(no_of_qubits+1)
+    C_NOT=[[0 for _ in range(clen)]for __ in range(clen)]
+    for i in range(clen-2):
+        C_NOT[i][i]=1
+    C_NOT[clen-1][clen-2]=1
+    C_NOT[clen-2][clen-1]=1
+    O=[[0 for _ in range(clen)]for __ in range(clen)]
+    for i in range(clen):
+        for j in range(clen):
+            for k in range(clen):
+                for l in range(clen):
+                    O[i][l]= O_[i][j] * C_NOT[j][k] * O_[k][l]
+    return O
+def S_operator(initial_ket):
+    l=len(initial_ket)
+    S=[[0 for _ in range(l)]for __ in range(l)]
+    for i in range(l):
+        for j in range(l):
+            if i==j:
+                S[i][j] = 2 * initial_ket[i] * initial_ket[j] -1
+            else :
+                S[i][j] = 2 * initial_ket[i] * initial_ket[j]
+    S=tp(S,I)
+    return S
         
-
+def grover_operator(initial_ket, no_of_qubits. a):
+    S=S_operator(initial_ket)
+    O=black_box(no_of_qubits,a)
+    glen=2**(no_of_qubits+1)
+    G=[[0 for _ in range(clen)]for __ in range(glen)]
+    for i in range(clen):
+        for j in range(clen):
+            for k in range(clen):
+                G[i][k]= S[i][j] * O[j][k]
+    return G
 a = [random.random() for _ in range 32]
 x = random.choice(a)
 
