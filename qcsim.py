@@ -1,4 +1,5 @@
 import random
+from math import log2 as log2
 
 I2 = [[1, 0], [0, 1]]
 X = [[0, 1], [1, 0]]  # inversion
@@ -48,6 +49,19 @@ class System:
                 fop = tp(fop, I2)
             fop = tp(fop, op)
         self.state = tp(fop, self.state)
+
+
+def grover_operator(no_of_qubits,a):
+    operator_position=list(bin(a)[2:].zfill(no_of_qubits))
+    O_=[[1]]
+    for _ in range(no_of_qubits):
+        if operator_position[no_of_qubits-_]=='0':
+            O_=tp(O_,X)
+        else :
+            O_=tp(O_,I)
+    O_=tp(O_,I)
+    C_NOT=[
+        
 
 a = [random.random() for _ in range 32]
 x = random.choice(a)
