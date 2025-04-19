@@ -102,7 +102,7 @@ def S_operator(initial_ket):
     S=tp(S,I)
     return S
         
-def grover_operator(initial_ket, no_of_qubits. a):
+def grover_operator(initial_ket, no_of_qubits, a):
     S=S_operator(initial_ket)
     O=black_box(no_of_qubits,a)
     glen=2**(no_of_qubits+1)
@@ -118,5 +118,4 @@ x = random.choice(a)
 s = System()
 for _ in range(5):
     s.add_qubit(Qubit1())
-
 
