@@ -1,11 +1,32 @@
 import random
 from math import log2 as log2, cos as cos, sin as sin
 
-I2 = [[1, 0], [0, 1]]
+I = [[1, 0], [0, 1]]
 X = [[0, 1], [1, 0]]  # inversion
 Z = [[1, 0], [0, 1]]  # measurement
 H = [[2**-0.5, 2**-0.5], [2**-0.5, -(2**-0.5)]]  # Hadamard
 
+def C_NOT(no_of_qubits, ctrl_list, ctrld_list):
+    #ctrl_list is the list containing the indexes of the control qubits
+    #ctrld_list is the list containing the indexex of the controlled qubits
+    clen=2**(no_of_qubits)
+    C=[[0 for _ in range(clen)] for __ in range(clen)]
+    for i in range(clen):
+        list_i = list(map(int,list(bin(i)[2:].zfill(no_of_qubits))))
+        and_gate_result = 1
+        for j in ctrl_list:
+            and_gate_result = and_gate_result * list_i[j]
+        if and_gate_result == 1:
+            for k in ctrld_list:
+                list_i[k] = (list_i[k]+1)%2
+            i_dash = 0
+            for k in range(no_of_qubits):
+                i_dash += 2**(no_of_qubits-1-k) * list_i[k]
+            C[i][i_dash] = 1
+        else:
+            C[i][i] = 1
+    return C, clen    
+    
 def tp(t1, t2):
     m1, n1, m2, n2 = len(t1[0]), len(t1), len(t2[0]), len(t2)
     prod = [[0 for _ in range(m1 * m2)] for __ in range(n1 * n2)]
@@ -56,23 +77,18 @@ def black_box(no_of_qubits,a):
     operator_position=list(bin(a)[2:].zfill(no_of_qubits))
     O_=[[1]]
     for _ in range(no_of_qubits):
-        if operator_position[no_of_qubits-_]=='0':
+        if operator_position[no_of_qubits-1-_]=='0':
             O_=tp(O_,X)
         else :
             O_=tp(O_,I)
     O_=tp(O_,I)
-    clen=2**(no_of_qubits+1)
-    C_NOT=[[0 for _ in range(clen)]for __ in range(clen)]
-    for i in range(clen-2):
-        C_NOT[i][i]=1
-    C_NOT[clen-1][clen-2]=1
-    C_NOT[clen-2][clen-1]=1
+    C, clen=C_NOT(no_of_qubits+1,list(range(no_of_qubits)),[no_of_qubits])
     O=[[0 for _ in range(clen)]for __ in range(clen)]
     for i in range(clen):
         for j in range(clen):
             for k in range(clen):
                 for l in range(clen):
-                    O[i][l]= O_[i][j] * C_NOT[j][k] * O_[k][l]
+                    O[i][l]= O_[i][j] * C[j][k] * O_[k][l]
     return O
 def S_operator(initial_ket):
     l=len(initial_ket)
