@@ -106,10 +106,10 @@ def grover_operator(initial_ket, no_of_qubits, a):
     S=S_operator(initial_ket)
     O=black_box(no_of_qubits,a)
     glen=2**(no_of_qubits+1)
-    G=[[0 for _ in range(clen)]for __ in range(glen)]
-    for i in range(clen):
-        for j in range(clen):
-            for k in range(clen):
+    G=[[0 for _ in range(glen)]for __ in range(glen)]
+    for i in range(glen):
+        for j in range(glen):
+            for k in range(glen):
                 G[i][k]= S[i][j] * O[j][k]
     return G
 a = [random.random() for _ in range 32]
@@ -118,4 +118,3 @@ x = random.choice(a)
 s = System()
 for _ in range(5):
     s.add_qubit(Qubit1())
-
