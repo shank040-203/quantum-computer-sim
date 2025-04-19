@@ -1,5 +1,5 @@
 import random
-from math import log2 as log2
+from math import log2 as log2, cos as cos, sin as sin
 
 I2 = [[1, 0], [0, 1]]
 X = [[0, 1], [1, 0]]  # inversion
@@ -18,8 +18,9 @@ def tp(t1, t2):
 
 class Qubit1:
     def __init__(self):
-        self.p0 = random.random()
-        self.p1 = (1 - self.p0**2) ** 0.5
+        self.theta = 2 * pi * random.random()
+        self.p0 = cos(self.theta)
+        self.p1 = sin(self.theta)
     def op(self, op):
         np0 = op[0][0] * self.p0 + op[0][1] * self.p1
         np1 = op[1][0] * self.p0 + op[1][1] * self.p1
