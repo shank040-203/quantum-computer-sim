@@ -6,6 +6,19 @@ X = [[0, 1], [1, 0]]  # inversion
 Z = [[1, 0], [0, 1]]  # measurement
 H = [[2**-0.5, 2**-0.5], [2**-0.5, -(2**-0.5)]]  # Hadamard
 
+def operators(no_of_qubits, X_POS, Z_POS, H_POS):
+    O=[[1]]
+    for i in range(no_of_qubits):
+        if i in X_POS:
+            O=tp(O,X)
+        elif i in Z_POS:
+            O=tp(O,Z)
+        elif i in H_POS:
+            O=tp(O,H)
+        else :
+            O=tp(O,I)
+    return O
+
 def C_NOT(no_of_qubits, ctrl_list, ctrld_list):
     #ctrl_list is the list containing the indexes of the control qubits
     #ctrld_list is the list containing the indexex of the controlled qubits
